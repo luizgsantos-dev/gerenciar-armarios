@@ -1,81 +1,74 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { Cabecalho, Rodape, EtiquetaStatus } from "@/components/marca";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABEL: Record<string, string> = {
-  AVAILABLE: "Disponível",
-  PENDING: "Em análise",
-  OCCUPIED: "Ocupado",
-  BLOCKED: "Indisponível",
-};
-
-const STATUS_STYLE: Record<string, string> = {
-  AVAILABLE: "bg-green-100 text-green-800",
-  PENDING: "bg-yellow-100 text-yellow-800",
-  OCCUPIED: "bg-red-100 text-red-800",
-  BLOCKED: "bg-gray-200 text-gray-600",
-};
-
 export default async function HomePage() {
-  const lockers = await prisma.locker.findMany({
-    orderBy: { code: "asc" },
-  });
+  const lockers = await prisma.locker.findMany({ orderBy: { code: "asc" } });
+  const disponiveis = lockers.filter((l) => l.status === "AVAILABLE").length;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-2xl font-semibold text-gray-900">
-        Armários do bloco
+    <div className="mx-auto w-full max-w-3xl px-6 py-8">
+      <Cabecalho />
+
+      <h1 className="titulo mt-12 text-5xl sm:text-6xl">
+        <span className="block text-white">Armários</span>
+        <span className="block text-laranja">do IC</span>
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Escolha um armário disponível para iniciar a reserva. Após o envio do
-        formulário e do comprovante de pagamento, o armário fica em análise
-        até a confirmação.
+
+      <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85">
+        Tenha um lugar somente seu no Instituto de Computação. Escolha um
+        armário disponível, envie seus dados e o comprovante do Pix — a
+        reserva é confirmada depois da conferência do pagamento.
       </p>
 
+      {lockers.length > 0 && (
+        <p className="mt-6 inline-flex items-center gap-2 bg-laranja px-3 py-1.5 text-sm font-bold text-azul">
+          {disponiveis} {disponiveis === 1 ? "armário livre" : "armários livres"}
+          <span className="font-medium">de {lockers.length}</span>
+        </p>
+      )}
+
       {lockers.length === 0 ? (
-        <p className="mt-8 text-sm text-gray-500">
+        <p className="mt-10 text-sm text-white/70">
           Nenhum armário cadastrado ainda.
         </p>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+        <div className="mt-8 overflow-x-auto bg-white">
+          <table className="min-w-full text-left">
+            <thead>
+              <tr className="border-b-2 border-azul">
+                <th className="px-5 py-3 text-xs font-bold uppercase tracking-widest text-azul">
                   Armário
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                <th className="px-5 py-3 text-xs font-bold uppercase tracking-widest text-azul">
                   Status
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
+                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-widest text-azul">
                   Ação
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody>
               {lockers.map((locker) => (
-                <tr key={locker.id}>
-                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                <tr key={locker.id} className="border-b border-azul/10">
+                  <td className="codigo px-5 py-3 text-lg text-azul">
                     {locker.code}
                   </td>
-                  <td className="px-4 py-3 text-sm">
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLE[locker.status]}`}
-                    >
-                      {STATUS_LABEL[locker.status]}
-                    </span>
+                  <td className="px-5 py-3">
+                    <EtiquetaStatus status={locker.status} />
                   </td>
-                  <td className="px-4 py-3 text-right text-sm">
+                  <td className="px-5 py-3 text-right">
                     {locker.status === "AVAILABLE" ? (
                       <Link
                         href={`/armario/${locker.id}`}
-                        className="font-medium text-blue-600 hover:text-blue-800"
+                        className="inline-block bg-azul px-4 py-2 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-laranja hover:text-azul"
                       >
                         Reservar
                       </Link>
                     ) : (
-                      <span className="text-gray-400">—</span>
+                      <span className="text-sm text-cinza">—</span>
                     )}
                   </td>
                 </tr>
@@ -85,11 +78,14 @@ export default async function HomePage() {
         </div>
       )}
 
-      <p className="mt-8 text-xs text-gray-400">
-        <Link href="/admin/login" className="hover:text-gray-600">
+      <Rodape>
+        <Link
+          href="/admin/login"
+          className="text-white/50 transition-colors hover:text-laranja"
+        >
           Acesso administrativo
         </Link>
-      </p>
+      </Rodape>
     </div>
   );
 }

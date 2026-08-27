@@ -1,9 +1,13 @@
-# Armários do Bloco
+# Armários do IC — CACOMP
 
-Sistema web para gerenciar a reserva das unidades de armário de um bloco.
-A pessoa escolhe um armário livre, preenche os dados, aceita o termo de uso
-e anexa o comprovante do Pix. A administração confere o comprovante e
-aprova ou rejeita — o status de cada armário é atualizado automaticamente.
+Sistema web para gerenciar a reserva dos armários do Instituto de
+Computação da UFMT. O estudante escolhe um armário livre, preenche os
+dados, aceita o termo de uso e anexa o comprovante do Pix. A diretoria do
+CACOMP confere o comprovante e aprova ou rejeita — o status de cada
+armário é atualizado automaticamente.
+
+A interface segue o **Manual de Marca do CACOMP v1.0 (2026)**: paleta,
+tipografia, tarja de identificação e tom de voz.
 
 ![Lista de armários](docs/img/lista.png)
 
@@ -53,6 +57,44 @@ Os quatro estados de um armário:
 - Sessão do admin em cookie `httpOnly` assinado (JWT via
   [jose](https://github.com/panva/jose)), senha com bcrypt
 - Docker + Docker Compose
+
+## Identidade visual
+
+Os tokens da marca ficam em
+[`src/app/globals.css`](src/app/globals.css) e os elementos reutilizáveis
+(wordmark, tarja, etiquetas de status) em
+[`src/components/marca.tsx`](src/components/marca.tsx).
+
+| Token          | Valor     | Uso no manual                                     |
+| -------------- | --------- | ------------------------------------------------- |
+| `azul`         | `#000192` | Cor primária: fundo padrão e texto sobre claro    |
+| `laranja`      | `#FF7032` | Cor de ação: destaques, tags, links e chamadas    |
+| `branco`       | `#FFFFFF` | Texto sobre azul e fundo de leitura longa         |
+| `cinza`        | `#585858` | Elementos secundários — nunca texto principal     |
+
+O amarelo `#FFCC66` é cor estendida de colaborações e, conforme o manual,
+não entra em peças oficiais — por isso não está declarado no projeto.
+
+### Sobre a fonte de título
+
+O manual especifica **Loubag** (Creative Media Lab) para títulos, que tem
+licença comercial e não está incluída aqui. O projeto usa uma serifada de
+peso equivalente como substituta — a mesma solução que o próprio manual
+adota em suas páginas de pré-visualização.
+
+Para aplicar a Loubag de verdade: coloque os arquivos em `src/app/fonts/`
+e troque o bloco marcado em [`src/app/layout.tsx`](src/app/layout.tsx) por
+`next/font/local`, mantendo a variável `--font-display`. Nenhum outro
+arquivo precisa mudar.
+
+### Sobre o símbolo
+
+O manual proíbe recompor o símbolo (rede de pessoas + radar) a partir de
+partes soltas e pede sempre o arquivo oficial — que não acompanha este
+repositório. Por isso o cabeçalho usa o **wordmark "CACOMP"** isolado, uso
+que o próprio manual autoriza. Para aplicar o símbolo, peça o SVG à
+diretoria de comunicação e siga a orientação no comentário de
+[`src/components/marca.tsx`](src/components/marca.tsx).
 
 ## Rodando com Docker
 
@@ -170,6 +212,8 @@ src/
     termos/              termo de uso
     admin/               login e painel administrativo
     api/admin/proof/     download do comprovante (exige sessão)
+  components/
+    marca.tsx            wordmark, tarja e etiquetas de status
   lib/
     actions/             server actions (reserva e administração)
     auth.ts              sessão do admin
@@ -184,10 +228,14 @@ docker-entrypoint.sh     migrations + bootstrap + start
 
 **Termo de uso** — o texto em
 [`src/app/termos/page.tsx`](src/app/termos/page.tsx) é um modelo inicial.
-Revise com a administração do bloco antes de divulgar o sistema.
+Revise com a diretoria do CACOMP antes de divulgar o sistema.
 
 **Armários** — cadastre os reais pelo painel administrativo, ou gere um
 conjunto inicial com `SEED_EXAMPLE_LOCKERS` e `SEED_LOCKER_COUNT`.
+
+**Contato** — o e-mail e o @ do CACOMP aparecem na tela de confirmação
+([`src/app/armario/[id]/sucesso/page.tsx`](src/app/armario/%5Bid%5D/sucesso/page.tsx))
+e no rodapé do termo de uso.
 
 ## Segurança
 

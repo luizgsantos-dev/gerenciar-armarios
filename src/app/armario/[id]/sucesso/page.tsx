@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { Cabecalho, Rodape } from "@/components/marca";
 
 export const dynamic = "force-dynamic";
 
@@ -17,22 +18,35 @@ export default async function SucessoPage({
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-16 text-center">
-      <h1 className="text-2xl font-semibold text-gray-900">
-        Reserva enviada!
+    <div className="mx-auto w-full max-w-2xl px-6 py-8">
+      <Cabecalho />
+
+      <h1 className="titulo mt-16 text-4xl sm:text-5xl">
+        <span className="block text-white">Reserva</span>
+        <span className="block text-laranja">enviada</span>
       </h1>
-      <p className="mt-3 text-sm text-gray-600">
-        Recebemos seus dados e o comprovante para o armário{" "}
-        <strong>{locker.code}</strong>. Ele ficará marcado como &ldquo;em
-        análise&rdquo; até a confirmação do pagamento pela administração. Você
-        será contatado pelo e-mail ou telefone informado.
-      </p>
+
+      <div className="mt-8 bg-white p-6 sm:p-8">
+        <p className="text-base leading-relaxed text-azul">
+          Recebemos seus dados e o comprovante do armário{" "}
+          <strong className="codigo">{locker.code}</strong>. Ele fica
+          em análise até a conferência do pagamento, e você será avisado pelo
+          e-mail ou telefone informado.
+        </p>
+        <p className="mt-4 text-sm text-cinza">
+          Dúvidas? Fale com o CACOMP pelo e-mail cacomp@aluno.ic.ufmt.br ou
+          pelo @cacompufmt.
+        </p>
+      </div>
+
       <Link
         href="/"
-        className="mt-6 inline-block text-sm font-medium text-blue-600 hover:text-blue-800"
+        className="mt-8 inline-block bg-laranja px-6 py-3 text-sm font-bold uppercase tracking-widest text-azul transition-colors hover:bg-white"
       >
-        Voltar para a lista de armários
+        Voltar para a lista
       </Link>
+
+      <Rodape />
     </div>
   );
 }

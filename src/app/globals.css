@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Identidade visual do CACOMP — Manual de Marca v1.0 (2026).
+ * A paleta institucional tem quatro cores; o amarelo #FFCC66 é de
+ * colaborações pontuais e não entra em peças oficiais, por isso não
+ * está declarado aqui.
+ */
+@theme {
+  --color-azul: #000192;
+  --color-laranja: #ff7032;
+  --color-cinza: #585858;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /*
+   * Fonte de título. O manual especifica Loubag (Creative Media Lab),
+   * de licença comercial — ver o comentário em layout.tsx sobre a
+   * substituição usada aqui e como trocar pela original.
+   */
+  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Fonte de texto: DM Sans, conforme o manual. */
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  /* Corpo nunca abaixo de 12px digital (manual, hierarquia tipográfica). */
+  font-size: 1rem;
+}
+
+/*
+ * Títulos em Loubag são sempre caixa alta — nunca minúsculas no H1/H2
+ * (manual, regras rápidas).
+ */
+.titulo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  /*
+   * A substituta serifada usa algarismos de estilo antigo por padrão, que
+   * descem abaixo da linha de base e destoam num título em caixa alta.
+   * A Loubag usa algarismos alinhados — isto reproduz esse comportamento.
+   */
+  font-variant-numeric: lining-nums;
+}
+
+/*
+ * Códigos de armário em tabela. O manual reserva DM Sans Black para
+ * "números e chamadas curtas", que é exatamente este caso — a fonte de
+ * título fica para os H1/H2.
+ */
+.codigo {
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+/*
+ * Tarja de identificação: toda peça leva "Instituto de Computação"
+ * no topo e/ou no rodapé (manual, elementos de apoio).
+ */
+.tarja {
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }

@@ -10,7 +10,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+      className="shrink-0 bg-azul px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-laranja hover:text-azul disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "Adicionando..." : "Adicionar"}
     </button>
@@ -34,7 +34,7 @@ export function AddLockerForm() {
     <form ref={formRef} action={formAction} className="space-y-2">
       <label
         htmlFor="code"
-        className="block text-sm font-medium text-gray-700"
+        className="block text-xs font-bold uppercase tracking-widest text-azul"
       >
         Novo armário
       </label>
@@ -45,11 +45,13 @@ export function AddLockerForm() {
           type="text"
           placeholder="Ex: A-01"
           required
-          className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="block w-full border border-azul/25 bg-white px-3 py-2.5 text-base text-azul outline-none transition-colors placeholder:text-cinza/60 focus:border-azul focus:ring-2 focus:ring-laranja"
         />
         <SubmitButton />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state?.error && (
+        <p className="text-sm font-medium text-cinza">{state.error}</p>
+      )}
     </form>
   );
 }
