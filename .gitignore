@@ -37,7 +37,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-# configuração local do Claude Code (contém caminhos da máquina)
+# configuração local de ferramentas de desenvolvimento
+# (contém caminhos da máquina)
 /.claude/
 
 # instruções para assistentes de IA, regeradas pelo `next dev` a cada
