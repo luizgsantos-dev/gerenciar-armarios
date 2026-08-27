@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    image: armario-bloco:latest
+    container_name: armario-bloco
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      # Obrigatório. Gere com:
+      # node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      AUTH_SECRET: ${AUTH_SECRET:?defina AUTH_SECRET no arquivo .env}
+
+      # Primeiro usuário admin (criado apenas se ainda não existir).
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?defina ADMIN_PASSWORD no arquivo .env}
+      ADMIN_FORCE_PASSWORD_RESET: ${ADMIN_FORCE_PASSWORD_RESET:-false}
+
+      # Armários de exemplo: só use para testar.
+      SEED_EXAMPLE_LOCKERS: ${SEED_EXAMPLE_LOCKERS:-false}
+      SEED_LOCKER_COUNT: ${SEED_LOCKER_COUNT:-20}
+    volumes:
+      # Banco SQLite — precisa persistir entre atualizações da imagem.
+      - armario-data:/app/data
+      # Comprovantes de pagamento enviados pelos usuários.
+      - armario-uploads:/app/uploads
+
+volumes:
+  armario-data:
+  armario-uploads:

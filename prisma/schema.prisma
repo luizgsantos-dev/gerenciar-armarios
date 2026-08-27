@@ -1,0 +1,57 @@
+generator client {
+  provider      = "prisma-client-js"
+  // 'native' cobre o desenvolvimento local; o alvo debian cobre a imagem Docker
+  // (node:22-slim), que usa OpenSSL 3.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum LockerStatus {
+  AVAILABLE
+  PENDING
+  OCCUPIED
+  BLOCKED
+}
+
+enum ReservationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Locker {
+  id           String        @id @default(cuid())
+  code         String        @unique
+  status       LockerStatus  @default(AVAILABLE)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Reservation {
+  id            String            @id @default(cuid())
+  locker        Locker            @relation(fields: [lockerId], references: [id])
+  lockerId      String
+  name          String
+  rga           String
+  phone         String
+  email         String
+  termsAccepted Boolean           @default(false)
+  proofFileName String
+  proofPath     String
+  status        ReservationStatus @default(PENDING)
+  reviewNote    String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
